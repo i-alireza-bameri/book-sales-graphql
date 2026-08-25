@@ -24,7 +24,7 @@ app.add_middleware(
 # GraphQL endpoint
 graphql_app = GraphQL(schema)
 app.add_route("/graphql", graphql_app)
-app.add_websocket_route("/graphql", graphql_app)
+app.add_api_websocket_route("/graphql", graphql_app)
 
 # Health check endpoint
 @app.get("/health")
