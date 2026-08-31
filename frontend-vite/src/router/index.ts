@@ -13,6 +13,12 @@ const routes = [
     meta: { requiresAuth: false },
   },
   {
+    path: '/signup',
+    name: 'Signup',
+    component: () => import('@/pages/Signup.vue'),
+    meta: { requiresAuth: false },
+  },
+  {
     path: '/products',
     name: 'Products',
     component: () => import('@/pages/Products.vue'),
@@ -31,7 +37,7 @@ router.beforeEach((to, from, next) => {
 
   if (requiresAuth && !authStore.isAuthenticated) {
     next('/login')
-  } else if (to.path === '/login' && authStore.isAuthenticated) {
+  } else if ((to.path === '/login' || to.path === '/signup') && authStore.isAuthenticated) {
     next('/products')
   } else {
     next()

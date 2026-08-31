@@ -13,6 +13,13 @@
               Login
             </router-link>
             <router-link 
+              v-if="!isAuthenticated" 
+              to="/signup"
+              class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Sign Up
+            </router-link>
+            <router-link 
               v-if="isAuthenticated" 
               to="/products"
               class="px-4 py-2 text-blue-600 hover:text-blue-800"
