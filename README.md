@@ -1,72 +1,42 @@
-# Book Sales GraphQL Platform
+# CMS - Content Management System
 
-A full-stack book sales application built with GraphQL, featuring a Python backend and Next.js frontend.
-
-## Tech Stack
-
-### Backend
-- **Framework**: FastAPI
-- **GraphQL**: Strawberry GraphQL
-- **Database**: PostgreSQL
-- **ORM**: SQLAlchemy
-- **Migrations**: Alembic
-- **Language**: Python 3.9+
-
-### Frontend
-- **Framework**: Next.js 14
-- **Language**: TypeScript
-- **GraphQL Client**: Apollo Client
-- **Styling**: Tailwind CSS
-- **Package Manager**: npm
+A full-stack Content Management System built with:
+- **Backend**: Python + Flask + GraphQL + SQLite
+- **Frontend**: React + Vite + JavaScript
 
 ## Project Structure
 
 ```
-book-sales-graphql/
-├── backend/
-│   ├── app/
-│   │   ├── __init__.py
-│   │   ├── models.py          # SQLAlchemy models
-│   │   └── schema.py           # Strawberry GraphQL schema
-│   ├── main.py                # FastAPI application
-│   ├── requirements.txt        # Python dependencies
-│   ├── .env.example           # Environment variables template
-│   └── alembic.ini            # Database migrations config
-├── frontend/
+.
+├── backend/              # Python GraphQL API
+│   ├── app.py           # Flask application
+│   ├── models.py        # Database models
+│   ├── resolvers.py     # GraphQL resolvers
+│   ├── requirements.txt  # Python dependencies
+│   └── README.md        # Backend setup guide
+│
+├── frontend/            # React Vite application
 │   ├── src/
-│   │   ├── pages/
-│   │   │   ├── _app.tsx       # Apollo Client setup
-│   │   │   └── index.tsx      # Home page
-│   │   └── styles/
-│   │       └── globals.css    # Global styles
-│   ├── package.json
-│   ├── next.config.js
-│   ├── tsconfig.json
-│   ├── tailwind.config.js
-│   ├── postcss.config.js
-│   └── .env.local.example     # Environment variables template
-├── .gitignore
-└── README.md
+│   │   ├── pages/       # Page components
+│   │   ├── store/       # Zustand stores
+│   │   ├── api/         # GraphQL client
+│   │   └── App.jsx      # Main app component
+│   ├── package.json     # Node dependencies
+│   └── vite.config.js   # Vite configuration
+│
+└── .gitignore          # Git ignore rules
 ```
 
-## Features
-
-- **Authors Management**: Create and manage book authors
-- **Books Catalog**: Browse and manage books with pricing and inventory
-- **Customer Management**: Handle customer information and profiles
-- **Orders System**: Process and track book orders
-- **GraphQL API**: Full-featured GraphQL endpoint for all operations
-
-## Getting Started
+## Quick Start
 
 ### Backend Setup
 
-1. Navigate to the backend directory:
+1. Navigate to backend directory:
    ```bash
    cd backend
    ```
 
-2. Create a virtual environment:
+2. Create virtual environment:
    ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\\Scripts\\activate
@@ -77,22 +47,20 @@ book-sales-graphql/
    pip install -r requirements.txt
    ```
 
-4. Set up environment variables:
+4. Configure environment:
    ```bash
    cp .env.example .env
-   # Edit .env with your database credentials
    ```
 
-5. Run the server:
+5. Run server:
    ```bash
-   python main.py
+   python app.py
    ```
-
-The GraphQL API will be available at `http://localhost:8000/graphql`
+   Server starts at: http://localhost:5000
 
 ### Frontend Setup
 
-1. Navigate to the frontend directory:
+1. Navigate to frontend directory:
    ```bash
    cd frontend
    ```
@@ -102,47 +70,173 @@ The GraphQL API will be available at `http://localhost:8000/graphql`
    npm install
    ```
 
-3. Set up environment variables:
+3. Configure environment:
    ```bash
-   cp .env.local.example .env.local
+   cp .env.example .env
    ```
 
-4. Run the development server:
+4. Run development server:
    ```bash
    npm run dev
    ```
+   App starts at: http://localhost:5173
 
-The frontend will be available at `http://localhost:3000`
+## Features
 
-## Database Schema
+✅ **User Authentication**
+- Sign up with email and password
+- Login with email and password
+- JWT token-based authentication
+- Persistent session storage
 
-### Tables
+✅ **Content Management**
+- Create, read, update, delete content
+- Organize content by categories
+- Draft and publish workflow
+- Automatic slug generation
 
-- **authors**: Author information
-- **books**: Book catalog with pricing and inventory
-- **customers**: Customer details
-- **orders**: Order information
-- **order_items**: Items in each order
+✅ **Admin Dashboard**
+- View all published content
+- Quick content statistics
+- Easy navigation to content manager
+
+✅ **Content Editor**
+- Rich text editor for content
+- Auto-generated slugs
+- Category assignment
+- Draft/publish toggle
 
 ## API Endpoints
 
-- `GET /health` - Health check
-- `POST /graphql` - GraphQL queries and mutations
-- `WS /graphql` - GraphQL subscriptions (WebSocket)
+### GraphQL Queries
+- `hello` - Test endpoint
+- `getContents(status)` - Get all contents
+- `getContent(id)` - Get specific content
+- `getCategories` - Get all categories
 
-## Next Steps
+### GraphQL Mutations
+- `signup(username, email, password)` - Create user
+- `login(email, password)` - Authenticate user
+- `createContent(...)` - Create new content
+- `updateContent(...)` - Update content
+- `deleteContent(id)` - Delete content
 
-1. Set up PostgreSQL database
-2. Run database migrations with Alembic
-3. Implement additional GraphQL queries and mutations
-4. Create frontend pages for:
-   - Book catalog
-   - Shopping cart
-   - Order management
-   - Author profiles
-5. Add authentication and authorization
-6. Implement payment processing
+## Database Schema
+
+### Users Table
+- id (UUID)
+- username (String, unique)
+- email (String, unique)
+- password (String, hashed)
+- is_admin (Boolean)
+- created_at (DateTime)
+- updated_at (DateTime)
+
+### Categories Table
+- id (UUID)
+- name (String, unique)
+- slug (String, unique)
+- description (Text)
+- created_at (DateTime)
+- updated_at (DateTime)
+
+### Contents Table
+- id (UUID)
+- title (String)
+- slug (String, unique)
+- description (Text)
+- body (Text)
+- status (String: draft/published)
+- author_id (FK to Users)
+- category_id (FK to Categories)
+- created_at (DateTime)
+- updated_at (DateTime)
+- published_at (DateTime)
+
+## Technology Stack
+
+### Backend
+- Flask - Web framework
+- Strawberry GraphQL - GraphQL implementation
+- SQLAlchemy - ORM
+- SQLite - Database
+- PyJWT - JWT authentication
+- bcrypt - Password hashing
+
+### Frontend
+- React 18 - UI library
+- Vite - Build tool & dev server
+- React Router - Routing
+- Zustand - State management
+- Axios - HTTP client
+
+## Environment Variables
+
+### Backend (.env)
+```
+FLASK_ENV=development
+FLASK_DEBUG=True
+SECRET_KEY=your-secret-key
+DATABASE_URL=sqlite:///cms.db
+JWT_SECRET=your-jwt-secret
+JWT_ALGORITHM=HS256
+```
+
+### Frontend (.env)
+```
+VITE_API_URL=http://localhost:5000
+VITE_GRAPHQL_ENDPOINT=http://localhost:5000/graphql
+```
+
+## Development Workflow
+
+1. Start backend server (Terminal 1):
+   ```bash
+   cd backend
+   python app.py
+   ```
+
+2. Start frontend dev server (Terminal 2):
+   ```bash
+   cd frontend
+   npm run dev
+   ```
+
+3. Open http://localhost:5173 in browser
+
+4. Create account and start managing content!
+
+## Building for Production
+
+### Backend
+```bash
+cd backend
+# No special build needed, deploy app.py with dependencies
+```
+
+### Frontend
+```bash
+cd frontend
+npm run build
+# Dist folder contains optimized production build
+```
+
+## Future Enhancements
+
+- [ ] Rich text editor (TinyMCE/CKEditor)
+- [ ] Image upload and management
+- [ ] User roles and permissions
+- [ ] Content scheduling
+- [ ] SEO optimization
+- [ ] API documentation (GraphQL Playground)
+- [ ] Unit and integration tests
+- [ ] Docker support
+- [ ] CI/CD pipeline
 
 ## License
 
-MIT
+MIT License
+
+## Support
+
+For issues or questions, please create an issue in the repository.
